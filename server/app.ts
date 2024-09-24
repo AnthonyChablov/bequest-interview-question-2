@@ -4,6 +4,9 @@ import cors from "cors";
 const PORT = 8080;
 const app = express();
 const database = { data: "Hello World" };
+/* Smart Contract Info */
+const contractAddres = "";
+const contractABI = "";
 
 app.use(cors());
 app.use(express.json());

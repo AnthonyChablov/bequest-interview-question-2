@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
+import { ethers } from "ethers"; // Import ethers.js
 
-const PORT = 8080;
+require("dotenv").config();
+const PORT = process.env.PORT || 8080;
 const app = express();
 const database = { data: "Hello World" };
 /* Smart Contract Info */

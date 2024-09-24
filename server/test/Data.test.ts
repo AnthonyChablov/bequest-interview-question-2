@@ -7,6 +7,10 @@ import { expect } from "chai";
 import hre, { ethers } from "hardhat";
 
 describe("Data", function () {
+  /* Instead of using beforeEach(), leveraging Hardhat's fixture functionality is recommended.
+   - Fixtures ensure tests run faster and more efficiently by reusing common setups.
+   - For more details, see: https://hardhat.org/hardhat-runner/docs/guides/test-contracts
+  */
   async function deployDataFixture() {
     const [owner] = await ethers.getSigners();
 

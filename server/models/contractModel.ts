@@ -18,7 +18,7 @@ export const initialize = async () => {
     console.log("Ethereum provider and contract initialized successfully.");
   } catch (err) {
     console.error(
-      "Error initializing Ethereum provider or contract, Please deploy hardhat local network or connect to :",
+      "Error initializing Ethereum provider or contract, Please deploy hardhat local network or connect to a network:",
       err
     );
   }

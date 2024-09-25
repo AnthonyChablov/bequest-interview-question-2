@@ -1,98 +1,20 @@
 import express from "express";
 import cors from "cors";
-import { ethers, Contract, JsonRpcSigner, JsonRpcProvider } from "ethers";
-import {
-  contractABI,
-  contractAddress,
-  networkEndpoint,
-} from "./config/contractInfo";
+import { initialize } from "./models/contractModel"; // Import the initialize function
+import dataRoutes from "./routes/dataRoutes";
 
 require("dotenv").config();
+
 const PORT = process.env.PORT || 8080;
 const app = express();
-const database = { data: "Hello World" };
 
 app.use(cors());
 app.use(express.json());
 
-// Module-level variables to store provider, signer, and contract
-let provider: JsonRpcProvider;
-let signer: JsonRpcSigner;
-let contract: Contract;
-
-// Connect to Hardhat local network
-const initialize = async () => {
-  try {
-    // Connect to Hardhat local network
-    provider = new ethers.JsonRpcProvider(networkEndpoint); // Enter the Ethereum network you want to connect to
-    signer = await provider.getSigner(); // By default, Hardhat provides unlocked accounts
-    contract = new ethers.Contract(contractAddress, contractABI, signer);
-    console.log("Ethereum provider and contract initialized successfully.");
-  } catch (err) {
-    console.error(
-      "Error initializing Ethereum provider or contract, Please deploy hardhat local network or connect to :",
-      err
-    );
-  }
-};
-
-// Initialize once when the module is loaded
+// Initialize the Ethereum provider and contract
 initialize();
 
-// Instantiate Contract Object
-// Routes
-app.get("/", (req, res) => {
-  try {
-    res.json(database);
-  } catch (err) {
-    console.error("Error fetching data:", err);
-    res.status(500).json({ message: "Failed to fetch data" });
-  }
-});
-
-/* Updates Data */
-app.post("/", async (req, res) => {
-  try {
-    const { data } = req.body;
-    if (!data) {
-      throw new Error("Invalid data");
-    }
-
-    // Update data in local database
-    database.data = data;
-
-    // Update data in the blockchain
-    const tx = await contract.setData(data);
-    await tx.wait();
-
-    res.json({ message: "Data updated successfully", data });
-  } catch (err) {
-    console.error("Error updating data:", err);
-    res.status(400).json({ message: err || "Failed to update data" });
-  }
-});
-
-/* Verify Data */
-// If no match return error, if match return success else error -- display states in front end
-app.post("/verify", async (req, res) => {
-  try {
-    // Get data from the block chain
-    const blockchainData = await contract.getData();
-
-    if (blockchainData === database.data) {
-      return res
-        .status(200)
-        .json({ message: "Verification successful: Data Matches" });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Verification failed: Data does not match" });
-    }
-  } catch (err) {
-    console.error("Error verifying data:", err);
-    res.status(500).json({ message: "Verification failed" });
-  }
-});
+app.use("/api", dataRoutes); // Use the data routes under /api/data
 
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);

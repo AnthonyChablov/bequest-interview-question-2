@@ -9,7 +9,7 @@ const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY ?? "";
 const config: HardhatUserConfig = {
   networks: {
     hardhat: {
-      chainId: 5000,
+      chainId: 8545,
     },
     sepolia: {
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,

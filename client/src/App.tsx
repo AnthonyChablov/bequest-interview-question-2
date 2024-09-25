@@ -3,34 +3,64 @@ import React, { useEffect, useState } from "react";
 const API_URL = "http://localhost:8080";
 
 function App() {
-  const [data, setData] = useState<string>();
+  const [data, setData] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    const response = await fetch(API_URL);
-    const { data } = await response.json();
-    setData(data);
-    console.log(data);
+    setLoading(true);
+    try {
+      const response = await fetch(API_URL);
+      const result = await response.json();
+      setData(result.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateData = async () => {
-    await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({ data }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-
-    await getData();
+    setLoading(true);
+    try {
+      await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ data }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      await getData(); // Refresh data after updating
+    } catch (error) {
+      console.error("Error updating data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const verifyData = async () => {
-    throw new Error("Not implemented");
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/verify`, {
+        method: "POST",
+        body: JSON.stringify({ data }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const result = await response.json();
+      alert(result.message); // Show success or error message
+    } catch (error) {
+      console.error("Error verifying data:", error);
+      alert("An error occurred during verification.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,22 +78,28 @@ function App() {
         fontSize: "30px",
       }}
     >
-      <div>Saved Data</div>
-      <input
-        style={{ fontSize: "30px" }}
-        type="text"
-        value={data}
-        onChange={(e) => setData(e.target.value)}
-      />
+      {loading ? (
+        <div style={{ fontSize: "30px" }}>Loading...</div>
+      ) : (
+        <>
+          <div>Saved Data</div>
+          <input
+            style={{ fontSize: "30px" }}
+            type="text"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+          />
 
-      <div style={{ display: "flex", gap: "10px" }}>
-        <button style={{ fontSize: "20px" }} onClick={updateData}>
-          Update Data
-        </button>
-        <button style={{ fontSize: "20px" }} onClick={verifyData}>
-          Verify Data
-        </button>
-      </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button style={{ fontSize: "20px" }} onClick={updateData}>
+              Update Data
+            </button>
+            <button style={{ fontSize: "20px" }} onClick={verifyData}>
+              Verify Data
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

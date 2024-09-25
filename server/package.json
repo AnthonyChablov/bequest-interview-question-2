@@ -6,9 +6,9 @@
   "scripts": {
     "start": "nodemon --exec ts-node app.ts",
    
-    "compile-contract": "hardhat compile",
+    "contract-compile": "hardhat compile",
     "contract-deploy:sepolia": "hardhat ignition deploy ./ignition/modules/Data.ts --network sepolia --show-stack-traces",
-    "contract-deploy:local": "hardhat ignition deploy ./ignition/modules/Data.ts --show-stack-traces",
+    "contract-deploy:local": "hardhat ignition deploy ./ignition/modules/Data.ts --network localhost --show-stack-traces",
     "contract-test": "hardhat test",
     "contract-coverage": "hardhat coverage"
   },

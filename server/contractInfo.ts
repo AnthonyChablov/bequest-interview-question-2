@@ -1,3 +1,4 @@
+require("dotenv").config();
 /* Smart Contract Info */
 const contractAddress =
   process.env.CONTRACT_ADDRESS ||

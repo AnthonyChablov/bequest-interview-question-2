@@ -2,9 +2,6 @@
 pragma solidity ^0.8.27;
 import "hardhat/console.sol";
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
-
 contract Data {
 
     // Define a struct to store the data

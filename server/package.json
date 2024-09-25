@@ -4,10 +4,13 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node app.ts ",
-    "compile": "hardhat compile",
-    "deploy:sepolia": "hardhat ignition deploy ./ignition/modules/Data.ts --network sepolia --show-stack-traces",
-    "deploy:local":"hardhat ignition deploy ./ignition/modules/Data.ts --show-stack-traces"
+    "start": "nodemon --exec ts-node app.ts",
+   
+    "compile-contract": "hardhat compile",
+    "contract-deploy:sepolia": "hardhat ignition deploy ./ignition/modules/Data.ts --network sepolia --show-stack-traces",
+    "contract-deploy:local": "hardhat ignition deploy ./ignition/modules/Data.ts --show-stack-traces",
+    "contract-test": "hardhat test",
+    "contract-coverage": "hardhat coverage"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +25,7 @@
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "hardhat": "^2.22.11"
+    "hardhat": "^2.22.11",
+    "nodemon": "^3.1.7"
   }
 }

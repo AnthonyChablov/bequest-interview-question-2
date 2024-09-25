@@ -13,6 +13,7 @@ function App() {
     const response = await fetch(API_URL);
     const { data } = await response.json();
     setData(data);
+    console.log(data);
   };
 
   const updateData = async () => {

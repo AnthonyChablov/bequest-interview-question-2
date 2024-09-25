@@ -3,7 +3,6 @@ pragma solidity ^0.8.27;
 import "hardhat/console.sol";
 
 contract Data {
-
     // Define a struct to store the data
     struct Database {
         string data;
@@ -13,7 +12,7 @@ contract Data {
 
     // Constructor to initialize the database with a default value
     constructor(string memory _data) {
-        database = Database({ data: _data });
+        database = Database({data: _data});
     }
 
     // Function to set new data in the database

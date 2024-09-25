@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:8080/api";
+const API_URL = "http://localhost:8080";
 
 function App() {
   const [data, setData] = useState<string>("");

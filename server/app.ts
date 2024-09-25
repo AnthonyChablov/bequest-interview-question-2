@@ -1,7 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { ethers, Contract, JsonRpcSigner, JsonRpcProvider } from "ethers";
-import { contractABI, contractAddress } from "./contractInfo";
+import {
+  contractABI,
+  contractAddress,
+  networkEndpoint,
+} from "./config/contractInfo";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 8080;
@@ -18,9 +22,18 @@ let contract: Contract;
 
 // Connect to Hardhat local network
 const initialize = async () => {
-  provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545/");
-  signer = await provider.getSigner(); // By default, Hardhat provides unlocked accounts
-  contract = new ethers.Contract(contractAddress, contractABI, signer);
+  try {
+    // Connect to Hardhat local network
+    provider = new ethers.JsonRpcProvider(networkEndpoint); // Enter the Ethereum network you want to connect to
+    signer = await provider.getSigner(); // By default, Hardhat provides unlocked accounts
+    contract = new ethers.Contract(contractAddress, contractABI, signer);
+    console.log("Ethereum provider and contract initialized successfully.");
+  } catch (err) {
+    console.error(
+      "Error initializing Ethereum provider or contract, Please deploy hardhat local network or connect to :",
+      err
+    );
+  }
 };
 
 // Initialize once when the module is loaded

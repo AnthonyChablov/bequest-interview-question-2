@@ -1,9 +1,18 @@
 require("dotenv").config();
+
 /* Smart Contract Info */
+
+// Contract address for the deployed smart contract.
+// This can be set via an environment variable or replaced with the actual address.
 const contractAddress =
   process.env.CONTRACT_ADDRESS ||
   "Replace with actual address of deployed contract"; // Replace with actual address of deployed contract
 
+// Ethereum Network to connect to.
+const networkEndpoint = "http://127.0.0.1:8545/";
+
+// ABI (Application Binary Interface) for the smart contract.
+// Defines the functions and data structures of the contract.
 const contractABI = [
   {
     inputs: [
@@ -57,4 +66,4 @@ const contractABI = [
   },
 ];
 
-export { contractABI, contractAddress };
+export { contractABI, contractAddress, networkEndpoint };

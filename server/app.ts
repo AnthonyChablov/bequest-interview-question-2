@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import { ethers, Contract, JsonRpcSigner, JsonRpcProvider } from "ethers";
+import crypto from "crypto-js";
 import { contractABI, contractAddress } from "./config/contractInfo";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 8080;
 const app = express();
-const database = { data: "Hello World" };
+let database = { data: "Hello World", hash: "" }; // Store both data and hash
 
 app.use(cors());
 app.use(express.json());
@@ -26,11 +27,15 @@ const initialize = async () => {
 // Initialize once when the module is loaded
 initialize();
 
-// Instantiate Contract Object
 // Routes
+
+/* Fetch Data */
 app.get("/", (req, res) => {
   try {
-    res.json(database);
+    res.json({
+      data: database.data,
+      hash: database.hash, // Send both the data and the hash
+    });
   } catch (err) {
     console.error("Error fetching data:", err);
     res.status(500).json({ message: "Failed to fetch data" });
@@ -48,11 +53,15 @@ app.post("/", async (req, res) => {
     // Update data in local database
     database.data = data;
 
+    // Hash the data and store it in the local database
+    const hashedData = crypto.SHA256(data).toString(crypto.enc.Hex);
+    database.hash = hashedData;
+
     // Update data in the blockchain
     const tx = await contract.setData(data);
     await tx.wait();
 
-    res.json({ message: "Data updated successfully", data });
+    res.json({ message: "Data updated successfully", data, hash: hashedData });
   } catch (err) {
     console.error("Error updating data:", err);
     res.status(400).json({ message: err || "Failed to update data" });
@@ -60,20 +69,25 @@ app.post("/", async (req, res) => {
 });
 
 /* Verify Data */
-// If no match return error, if match return success else error -- display states in front end
 app.post("/verify", async (req, res) => {
   try {
-    // Get data from the block chain
+    // Get data from the blockchain
     const blockchainData = await contract.getData();
 
-    if (blockchainData === database.data) {
+    // Hash the blockchain data
+    const blockchainDataHash = crypto
+      .SHA256(blockchainData)
+      .toString(crypto.enc.Hex);
+
+    // Compare blockchain hash with stored hash
+    if (blockchainDataHash === database.hash) {
       return res
         .status(200)
-        .json({ message: "Verification successful: Data Matches" });
+        .json({ message: "Verification successful: Hashes match" });
     } else {
       return res
         .status(400)
-        .json({ message: "Verification failed: Data does not match" });
+        .json({ message: "Verification failed: Hashes do not match" });
     }
   } catch (err) {
     console.error("Error verifying data:", err);

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import crypto from "crypto-js"; // Import crypto-js for hashing
 
 const API_URL = "http://localhost:8080";
 
 function App() {
   const [data, setData] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [hash, setHash] = useState<string>(""); // Add hash state
 
   useEffect(() => {
     getData();
@@ -16,6 +18,7 @@ function App() {
       const response = await fetch(API_URL);
       const result = await response.json();
       setData(result.data);
+      setHash(result.hash); // Set hash from the backend response
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -45,16 +48,15 @@ function App() {
   const verifyData = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/verify`, {
-        method: "POST",
-        body: JSON.stringify({ data }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
-      alert(result.message); // Show success or error message
+      // Hash the input data
+      const hashedInputData = crypto.SHA256(data).toString(crypto.enc.Hex);
+
+      // Compare the hashed input data with the stored hash
+      if (hashedInputData === hash) {
+        alert("Verification successful: Hashes match!");
+      } else {
+        alert("Verification failed: Hashes do not match!");
+      }
     } catch (error) {
       console.error("Error verifying data:", error);
       alert("An error occurred during verification.");
@@ -82,14 +84,14 @@ function App() {
         <div style={{ fontSize: "30px" }}>Loading...</div>
       ) : (
         <>
-          <div>Saved Data</div>
+          <div>Saved Data: {data}</div>
+          <div>Saved Hash: {hash}</div> {/* Display the hash */}
           <input
             style={{ fontSize: "30px" }}
             type="text"
             value={data}
             onChange={(e) => setData(e.target.value)}
           />
-
           <div style={{ display: "flex", gap: "10px" }}>
             <button style={{ fontSize: "20px" }} onClick={updateData}>
               Update Data

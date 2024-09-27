@@ -4,6 +4,9 @@ At Bequest, we require that important user data is tamper proof. Otherwise, our 
 
 **1. How does the client ensure that their data has not been tampered with?**
 <br />
+To ensure that the data has not been tampered with, a variety of tools and techniques have been utilized to guarantee integrity and security throughout the data life cycle. To fully ensure that user data has not been tampered with, I utilized the Ethereum, a decentralized block chain network with Smart Contract capabilities, as well as cryptographic hashing, and encryption.
+
+<br />
 **2. If the data has been tampered with, how can the client recover the lost data?**
 
 Edit this repo to answer these two questions using any technologies you'd like, there any many possible solutions. Feel free to add comments.

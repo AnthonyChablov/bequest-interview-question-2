@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { ethers, Contract, JsonRpcSigner, JsonRpcProvider } from "ethers";
 import crypto from "crypto-js";
-import { contractABI, contractAddress } from "./config/contractInfo";
+import { contractABI } from "./config/contractInfo";
 import { decryptData, encryptData } from "./utils/utils";
 
 require("dotenv").config();
@@ -13,10 +13,13 @@ let database = { data: "Hello World", hash: "" }; // Store both data and hash
 app.use(cors());
 app.use(express.json());
 
-// Module-level variables to store provider, signer, and contract
+// Module-level variables to store provider, signer, contract address and contract
 let provider: JsonRpcProvider;
 let signer: JsonRpcSigner;
 let contract: Contract;
+
+/* IMPORTANT */
+const contractAddress = process.env.CONTRACT_ADDRESS || ""; // Replace with actual address of deployed contract
 
 // Connect to Hardhat local network
 const initialize = async () => {
@@ -29,7 +32,6 @@ const initialize = async () => {
 initialize();
 
 // Routes
-
 /* Fetch Data */
 app.get("/", (req, res) => {
   try {

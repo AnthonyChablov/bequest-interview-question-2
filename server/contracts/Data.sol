@@ -2,32 +2,35 @@
 pragma solidity ^0.8.27;
 
 contract Data {
+    // Struct to store encrypted data and its hash
     struct Database {
-        string data;
-        string hash; // Store both the original data and its hash
+        string encryptedData;  // Encrypted data
+        string dataHash;       // Hash of the data
     }
 
     Database public database;
 
-    // Constructor to initialize the database with default values
-    constructor(string memory _data, string memory _hash) {
-        database = Database({ data: _data, hash: _hash});
+    // Constructor to initialize the contract with encrypted data and its hash
+    constructor(string memory _encryptedData, string memory _dataHash) {
+        database = Database({
+            encryptedData: _encryptedData,
+            dataHash: _dataHash
+        });
     }
 
-    // Function to set new data and its hash in the database
-    function setData(string memory _data, string memory _hash) public {
-        database.data = _data;
-        database.hash = _hash;
-        
+    // Function to set new encrypted data and its hash
+    function setData(string memory _encryptedData, string memory _dataHash) public {
+        database.encryptedData = _encryptedData;
+        database.dataHash = _dataHash;
     }
 
-    // Function to get the current data
-    function getData() public view returns (string memory) {
-        return database.data;
+    // Function to get the encrypted data
+    function getEncryptedData() public view returns (string memory) {
+        return database.encryptedData;
     }
 
-    // Function to get the current hash
-    function getHash() public view returns (string memory) {
-        return database.hash;
+    // Function to get the hash of the data
+    function getDataHash() public view returns (string memory) {
+        return database.dataHash;
     }
 }

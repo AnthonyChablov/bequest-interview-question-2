@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import crypto from "crypto-js"; // Import crypto-js for hashing
 
 const API_URL = "http://localhost:8080";
 
 function App() {
   const [data, setData] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [hash, setHash] = useState<string>(""); // Add hash state
+  const [hash, setHash] = useState<string>("");
 
   useEffect(() => {
     getData();
@@ -48,18 +47,46 @@ function App() {
   const verifyData = async () => {
     setLoading(true);
     try {
-      // Hash the input data
-      const hashedInputData = crypto.SHA256(data).toString(crypto.enc.Hex);
+      const response = await fetch(`${API_URL}/verify`, {
+        method: "POST",
+        body: JSON.stringify({ data }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
-      // Compare the hashed input data with the stored hash
-      if (hashedInputData === hash) {
-        alert("Verification successful: Hashes match!");
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message); // Show success message
       } else {
-        alert("Verification failed: Hashes do not match!");
+        alert(result.message); // Show error message
       }
     } catch (error) {
       console.error("Error verifying data:", error);
       alert("An error occurred during verification.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const recoverData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/recover`, {
+        method: "POST",
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setData(result.data);
+        setHash(result.hash);
+        alert(result.message);
+      } else {
+        alert(result.message || "Failed to recover data");
+      }
+    } catch (error) {
+      console.error("Error recovering data:", error);
+      alert("Failed to recover data");
     } finally {
       setLoading(false);
     }
@@ -84,8 +111,7 @@ function App() {
         <div style={{ fontSize: "30px" }}>Loading...</div>
       ) : (
         <>
-          <div>Saved Data: {data}</div>
-          <div>Saved Hash: {hash}</div> {/* Display the hash */}
+          <div>Saved Data</div>
           <input
             style={{ fontSize: "30px" }}
             type="text"
@@ -100,6 +126,10 @@ function App() {
               Verify Data
             </button>
           </div>
+          <button style={{ fontSize: "20px" }} onClick={recoverData}>
+            Recover Data
+          </button>
+          <div className="">{}</div>
         </>
       )}
     </div>

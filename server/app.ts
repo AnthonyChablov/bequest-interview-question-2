@@ -3,6 +3,7 @@ import cors from "cors";
 import { ethers, Contract, JsonRpcSigner, JsonRpcProvider } from "ethers";
 import crypto from "crypto-js";
 import { contractABI, contractAddress } from "./config/contractInfo";
+import { decryptData, encryptData } from "./utils/utils";
 
 require("dotenv").config();
 const PORT = process.env.PORT || 8080;
@@ -20,7 +21,7 @@ let contract: Contract;
 // Connect to Hardhat local network
 const initialize = async () => {
   provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545/");
-  signer = await provider.getSigner(); // By default, Hardhat provides unlocked accounts
+  signer = await provider.getSigner();
   contract = new ethers.Contract(contractAddress, contractABI, signer);
 };
 
@@ -34,7 +35,7 @@ app.get("/", (req, res) => {
   try {
     res.json({
       data: database.data,
-      hash: database.hash, // Send both the data and the hash
+      hash: database.hash, // Return the hash as well for verification
     });
   } catch (err) {
     console.error("Error fetching data:", err);
@@ -50,18 +51,21 @@ app.post("/", async (req, res) => {
       throw new Error("Invalid data");
     }
 
-    // Update data in local database
-    database.data = data;
-
-    // Hash the data and store it in the local database
+    // Hash the data and store the hash locally
     const hashedData = crypto.SHA256(data).toString(crypto.enc.Hex);
-    database.hash = hashedData;
+    const encryptedData = encryptData(data); // Encrypt the data
+    database.data = data; // Store original data in your local database (if needed)
+    database.hash = hashedData; // Store hashed data in your local database
 
-    // Update data in the blockchain
-    const tx = await contract.setData(data);
+    // Send the hashed data to the blockchain (instead of the raw data)
+    const tx = await contract.setData(encryptedData, hashedData); // Send the encrypted data to blockchain
     await tx.wait();
 
-    res.json({ message: "Data updated successfully", data, hash: hashedData });
+    res.json({
+      message: "Data updated successfully",
+      data: data, // Send original data back to the client
+      hash: hashedData, // Send the hash for reference
+    });
   } catch (err) {
     console.error("Error updating data:", err);
     res.status(400).json({ message: err || "Failed to update data" });
@@ -72,12 +76,7 @@ app.post("/", async (req, res) => {
 app.post("/verify", async (req, res) => {
   try {
     // Get data from the blockchain
-    const blockchainData = await contract.getData();
-
-    // Hash the blockchain data
-    const blockchainDataHash = crypto
-      .SHA256(blockchainData)
-      .toString(crypto.enc.Hex);
+    const blockchainDataHash = await contract.getDataHash();
 
     // Compare blockchain hash with stored hash
     if (blockchainDataHash === database.hash) {
@@ -92,6 +91,35 @@ app.post("/verify", async (req, res) => {
   } catch (err) {
     console.error("Error verifying data:", err);
     res.status(500).json({ message: "Verification failed" });
+  }
+});
+
+/* Recover Data from Blockchain */
+app.post("/recover", async (req, res) => {
+  try {
+    // Fetch the encrypted data from the blockchain
+    const blockchainData = await contract.getEncryptedData();
+
+    // Decrypt the blockchain data
+    const decryptedData = decryptData(blockchainData);
+
+    // Hash the decrypted data
+    const blockchainDataHash = crypto
+      .SHA256(decryptedData)
+      .toString(crypto.enc.Hex);
+
+    // Recover and update local database with blockchain data and hash
+    database.data = decryptedData;
+    database.hash = blockchainDataHash;
+
+    res.json({
+      message: "Data successfully recovered from blockchain",
+      data: decryptedData,
+      hash: blockchainDataHash,
+    });
+  } catch (err) {
+    console.error("Error recovering data:", err);
+    res.status(500).json({ message: "Failed to recover data" });
   }
 });
 

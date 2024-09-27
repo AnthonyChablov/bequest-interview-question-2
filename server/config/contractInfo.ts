@@ -16,7 +16,12 @@ const contractABI = [
     inputs: [
       {
         internalType: "string",
-        name: "_data",
+        name: "_encryptedData",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_dataHash",
         type: "string",
       },
     ],
@@ -29,7 +34,12 @@ const contractABI = [
     outputs: [
       {
         internalType: "string",
-        name: "data",
+        name: "encryptedData",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "dataHash",
         type: "string",
       },
     ],
@@ -38,7 +48,20 @@ const contractABI = [
   },
   {
     inputs: [],
-    name: "getData",
+    name: "getDataHash",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getEncryptedData",
     outputs: [
       {
         internalType: "string",
@@ -53,7 +76,12 @@ const contractABI = [
     inputs: [
       {
         internalType: "string",
-        name: "_data",
+        name: "_encryptedData",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_dataHash",
         type: "string",
       },
     ],

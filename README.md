@@ -133,3 +133,7 @@ const contractAddress = process.env.CONTRACT_ADDRESS || ""; // Replace with actu
 1. Clone the repo
 2. Make a PR with your changes in your repo
 3. Email your github repository to robert@bequest.finance
+
+# Disclaimer:
+
+All mnemonics and keys used in this application are for testing purposes only. I do not possess any tokens or currency in these account, and this application is not intended for actual financial transactions. Any data or keys provided should not be considered secure or usable for real-world cryptocurrency management. This application is solely for educational and testing purposes only.

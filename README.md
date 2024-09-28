@@ -116,13 +116,13 @@ app.post("/recover", async (req, res) => {
 
 ### To run the app:
 
-`npm install` in both the frontend and backend
-`npm run start` in both the frontend and backend via two different terminals
-`npm run start:hardhat` to run our local test network in a separate terminal
-`npm compile:contract` to compile the Solidity smart contract using the Hardhat compile script
-`npm run deploy:local` to deploy our compiled smart contract to our local test Ethereum network
-When successfully deployed we need to save the address of where our contract is deplyed to.
-In our Express.js applcation we need to change our contract address in this var:
+`npm install` in both the frontend and backend <br />
+`npm run start` in both the frontend and backend via two different terminals <br />
+`npm run start:hardhat` to run our local test network in a separate terminal <br />
+`npm compile:contract` to compile the Solidity smart contract using the Hardhat compile script <br />
+`npm run deploy:local` to deploy our compiled smart contract to our local test Ethereum network <br />
+When successfully deployed we need to save the address of where our contract is deplyed to. <br />
+In our Express.js applcation we need to change our contract address in this var: <br />
 
 ```javascript
 const contractAddress = process.env.CONTRACT_ADDRESS || ""; // Replace with actual address of deployed contract

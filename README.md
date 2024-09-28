@@ -47,7 +47,8 @@ The latest version of Hardhat introduces a new module system called **Ignition**
 
 For more information on Ignition, visit the [official Hardhat documentation](https://hardhat.org/ignition/docs/getting-started#overview).
 
-**1. How does the client ensure that their data has not been tampered with?**
+# 1. How does the client ensure that their data has not been tampered with?
+
 <br />
 To ensure that the data has not been tampered with, a variety of tools and techniques have been utilized to guarantee integrity and security throughout the data life cycle. I utilized the Ethereum blockchain as well as cryptographic hashing, and encryption. The reason why I believe blockchain to be a suitable tool for this problem is because it is an immutable ledger by which we can store records in a way that is transparent that is resistant to tampering.  
 <br />
@@ -79,10 +80,7 @@ app.post("/verify", async (req, res) => {
 });
 ```
 
-<br />
-
-<br />
-**2. If the data has been tampered with, how can the client recover the lost data?**
+# 2. If the data has been tampered with, how can the client recover the lost data?
 
 If the data hash from the off-chain database does not match the data hash stored on the blockchain, users can recover their data at any time by invoking the recovery endpoint by clicking the 'recover data' button. In this implementation the data is fetched from the smart contract and then decrypted and returned to the user. Below is the implementation of the recovery process:
 

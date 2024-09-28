@@ -84,7 +84,7 @@ app.post("/verify", async (req, res) => {
 
 If the data hash from the off-chain database does not match the data hash stored on the blockchain, users can recover their data at any time by invoking the recovery endpoint by clicking the 'recover data' button. In this implementation the data is fetched from the smart contract and then decrypted and returned to the user. Below is the implementation of the recovery process:
 
-`````javascript
+````````````javascript
 /* Recover Data from Blockchain */
 app.post("/recover", async (req, res) => {
   try {
@@ -112,7 +112,7 @@ app.post("/recover", async (req, res) => {
     console.error("Error recovering data:", err);
     res.status(500).json({ message: "Failed to recover data" });
   }
-});````
+});```````````
 
 ### To run the app:
 
@@ -124,9 +124,9 @@ app.post("/recover", async (req, res) => {
 When successfully deployed we need to save the address of where our contract is deplyed to.
 In our Express.js applcation we need to change our contract address in this var:
 
-````javascript
+```javascript
 const contractAddress = process.env.CONTRACT_ADDRESS || ""; // Replace with actual address of deployed contract
-`````
+```
 
 ## To make a submission:
 
@@ -138,6 +138,4 @@ const contractAddress = process.env.CONTRACT_ADDRESS || ""; // Replace with actu
 
 All mnemonics and keys used in this application are for testing purposes only. I do not possess any tokens or currency in these account, and this application is not intended for actual financial transactions. Any data or keys provided should not be considered secure or usable for real-world cryptocurrency management. This application is solely for educational and testing purposes only.
 
-```
-
-```
+````````````

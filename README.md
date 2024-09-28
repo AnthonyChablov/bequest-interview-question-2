@@ -51,7 +51,7 @@ For more information on Ignition, visit the [official Hardhat documentation](htt
 
 <br />
 To ensure that the data has not been tampered with, a variety of tools and techniques have been utilized to guarantee integrity and security throughout the data life cycle. I utilized the Ethereum blockchain as well as cryptographic hashing, and encryption. The reason why I believe blockchain to be a suitable tool for this problem is because it is an immutable ledger by which we can store records in a way that is transparent that is resistant to tampering.  
-<br />
+<br /><br />
 In terms of the flow of this application, a user can ensure that their data has not been tampered with by clicking on the verify data button, this button triggers a response that hits the '/verify' endpoint of our api backend. In this api endpoint, the logic surrounding the verification process can be found. This verification process comprises of comparing the data hash that we have persisted in our off-chain centralized database to that of the data hash stored in the Smart-Contract of the Ethereum blockchain. If the hashes match, the user will receive a success message which indicates that their data is intact and has not been tampered with. Alternatively, if the data hashes do not match, an error message is returned, clearly indicating potential tampering. This straightforward verification mechanism ensures users can trust the integrity of their data.
 
 Below is the implementation of the verify process:
